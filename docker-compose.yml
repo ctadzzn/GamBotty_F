@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  gambottyapi:
+    image: gambottyapi:latest
+    build:
+      context: gambottyapi
+      dockerfile: Dockerfile
+    ports:
+      - 8090:8090
+    depends_on:
+      PostgreSQL:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgreSQL:5432/gambottydb
+      - SPRING_DATASOURCE_USERNAME=gambotty
+      - SPRING_DATASOURCE_PASSWORD=123123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  PostgreSQL:
+    image: postgres:14.1
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=123123
+      - POSTGRES_USER=gambotty
+      - POSTGRES_DB=gambottydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gambottyadmin:
+    image: gambottyadmin:latest
+    build:
+      context: source-front-end
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_BASE_URL=http://localhost:8090
+    ports:
+      - 8091:80
+    depends_on:
+      - gambottyapi

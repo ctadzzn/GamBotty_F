@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GambottyapiApplication<gambottyapi>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.fsoft.gam.dci.gambottyapi.GambottyapiApplication",
+            "projectName": "gambottyapi",
+            "args": ""
+        }
+    ]
+}
